@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController // 「ここはWebの受付窓口（API）ですよ」という看板。これをつけるとデータの返信係になる。
-@CrossOrigin(origins = "http://localhost:3000") // ★追加: 「http://localhost:3000 (React) からのアクセスは許可するよ」という意味
+@CrossOrigin(origins = "http://localhost:5173") // ★追加: 「http://localhost:5173 (React) からのアクセスは許可するよ」という意味
 public class BookController {
 
     private final BookRepository bookRepository; // 倉庫係（マジックハンド）を用意
