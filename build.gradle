@@ -1,0 +1,51 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.0.2'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+description = 'Demo project for Spring Boot'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+    // 【修正前】 implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    // 【修正後】 これにします↓
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // 【修正前】 testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    // 【修正後】 テスト用も標準的なこれにします↓
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // ↓ここはそのままでOKです！
+    // 1. JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // 2. H2 Database
+    runtimeOnly 'com.h2database:h2'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
