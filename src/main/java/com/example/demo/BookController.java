@@ -1,28 +1,35 @@
-// ブラウザ（利用者）からのアクセスを最初に受け取る場所です。
-
 package com.example.demo;
 
-import org.springframework.web.bind.annotation.CrossOrigin; // CORSの設定をするための輸入
+// 新しい機能（データを受け取るための機能）を輸入
+import org.springframework.web.bind.annotation.PostMapping; // ★追加
+import org.springframework.web.bind.annotation.RequestBody; // ★追加
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
-@RestController // 「ここはWebの受付窓口（API）ですよ」という看板。これをつけるとデータの返信係になる。
-@CrossOrigin(origins = "http://localhost:5173") // ★追加: 「http://localhost:5173 (React) からのアクセスは許可するよ」という意味
+@RestController
+@CrossOrigin(origins = "http://localhost:5173") // Reactからのアクセスを許可
 public class BookController {
 
-    private final BookRepository bookRepository; // 倉庫係（マジックハンド）を用意
+    private final BookRepository bookRepository;
 
-    // コンストラクタ（入社手続き）
-    // Spring Bootが自動的に、さっき作った BookRepository をここに渡してくれます（DIと言います）
     public BookController(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
-    @GetMapping("/books") // 「http://.../books という住所にアクセスが来たら、ここを実行して！」という看板
+    // 1. 本の一覧を返す機能（GET）
+    @GetMapping("/books")
     public List<Book> getBooks() {
-        // 倉庫係に「全部持ってきて！」と命令し、その結果をそのまま利用者に返します。
-        // 自動的に JSON形式（[{}, {}]）に変換されます。
         return bookRepository.findAll();
+    }
+
+    // 2. 新しい本を保存する機能（POST）★ここが新機能！
+    // @PostMapping: 「データを送るから保存して！」というリクエストを受け付ける看板
+    // @RequestBody: 「送られてきたデータ（JSON）を、BookというJavaの形に変換してね」という命令
+    @PostMapping("/books")
+    public Book createBook(@RequestBody Book book) {
+        // 受け取った本を、マジックハンドを使ってDBに保存！
+        return bookRepository.save(book);
     }
 }
